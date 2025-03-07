@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      .container {
+        padding: 20px;
+      }
+      h2 {
+        margin-top: 0;
+      }
+      label {
+        display: block;
+        margin-top: 10px;
+      }
+      input, select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        box-sizing: border-box;
+      }
+      button {
+        margin-top: 15px;
+        padding: 10px;
+        width: 100%;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Add Employee</h2>
+      <form id="employeeForm">
+        <!-- Note: JCC ID is generated automatically, so it's not included in the form -->
+        <label for="initials">Initials:</label>
+        <input type="text" id="initials" name="initials" required>
+        
+        <label for="commonName">Common Name:</label>
+        <input type="text" id="commonName" name="commonName" required>
+        
+        <label for="legalName">Legal Name:</label>
+        <input type="text" id="legalName" name="legalName" required>
+        
+        <label for="jobTitle">Job Title:</label>
+        <select id="jobTitle" name="jobTitle" required>
+          <option value="Associate DVM">Associate DVM</option>
+          <option value="Boarding Assistant">Boarding Assistant</option>
+          <option value="Boarding Manager">Boarding Manager</option>
+          <option value="CCA">CCA</option>
+          <option value="CCS">CCS</option>
+          <option value="Lead DVM">Lead DVM</option>
+          <option value="LVT">LVT</option>
+          <option value="Office Manager">Office Manager</option>
+          <option value="PCA">PCA</option>
+          <option value="PCM">PCM</option>
+          <option value="PCS">PCS</option>
+          <option value="Practice Manager">Practice Manager</option>
+          <option value="Practice Owner">Practice Owner</option>
+        </select>
+        
+        <label for="hireDate">Hire Date:</label>
+        <input type="date" id="hireDate" name="hireDate" required>
+        
+        <label for="schedule">Schedule:</label>
+        <select id="schedule" name="schedule" required>
+          <option value="Part-time">Part-time</option>
+          <option value="Full-time">Full-time</option>
+        </select>
+        
+        <label for="status">Status:</label>
+        <select id="status" name="status" required>
+          <option value="Onboarding">Onboarding</option>
+          <option value="Training">Training</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+        
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+    
+    <script>
+      // Handle form submission.
+      document.getElementById("employeeForm").addEventListener("submit", function(e) {
+        e.preventDefault(); // Prevent default form submission
+        
+        // Gather form data into an employee object.
+        var employee = {
+          initials: document.getElementById("initials").value,
+          commonName: document.getElementById("commonName").value,
+          legalName: document.getElementById("legalName").value,
+          jobTitle: document.getElementById("jobTitle").value,
+          hireDate: document.getElementById("hireDate").value,
+          schedule: document.getElementById("schedule").value,
+          status: document.getElementById("status").value
+        };
+        
+        // Call the server-side addEmployee function.
+        google.script.run
+          .withSuccessHandler(function() {
+            alert("Employee added successfully!");
+            document.getElementById("employeeForm").reset();
+            // Optionally close the dialog.
+            google.script.host.close();
+          })
+          .withFailureHandler(function(err) {
+            alert("Error adding employee: " + err);
+          })
+          .addEmployee(employee);
+      });
+    </script>
+  </body>
+</html>
