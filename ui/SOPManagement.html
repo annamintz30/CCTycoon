@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>SOP Management</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 20px; }
+      label { display: block; margin-top: 10px; }
+      input, textarea { width: 100%; padding: 8px; margin-top: 5px; }
+      button { margin-top: 15px; padding: 10px; }
+    </style>
+  </head>
+  <body>
+    <h2>Create / Update SOP</h2>
+    <form id="sopForm">
+      <label for="title">SOP Title:</label>
+      <input type="text" id="title" required>
+      
+      <label for="content">Content:</label>
+      <textarea id="content" required></textarea>
+      
+      <button type="submit">Save SOP</button>
+    </form>
+    
+    <script>
+      document.getElementById('sopForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        var sop = {
+          title: document.getElementById('title').value,
+          content: document.getElementById('content').value
+        };
+        
+        google.script.run.withSuccessHandler(function(response) {
+          alert(response.message);
+        }).saveSOP(sop);
+      });
+    </script>
+  </body>
+</html>

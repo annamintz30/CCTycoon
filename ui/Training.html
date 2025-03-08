@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Training Module</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 20px; }
+      label { display: block; margin-top: 10px; }
+      input, select { width: 100%; padding: 8px; margin-top: 5px; }
+      button { margin-top: 15px; padding: 10px; }
+    </style>
+  </head>
+  <body>
+    <h2>Record Training Progress</h2>
+    <form id="trainingForm">
+      <label for="employeeId">Employee ID:</label>
+      <input type="text" id="employeeId" required>
+      
+      <label for="module">Training Module:</label>
+      <input type="text" id="module" required>
+      
+      <label for="progress">Progress (%):</label>
+      <input type="number" id="progress" min="0" max="100" required>
+      
+      <button type="submit">Submit Training Record</button>
+    </form>
+    
+    <script>
+      document.getElementById('trainingForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        var training = {
+          employeeId: document.getElementById('employeeId').value,
+          module: document.getElementById('module').value,
+          progress: document.getElementById('progress').value
+        };
+        
+        google.script.run.withSuccessHandler(function(response) {
+          alert(response.message);
+        }).updateTraining(training);
+      });
+    </script>
+  </body>
+</html>
