@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Employee Form</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      label {
+        display: block;
+        margin-top: 10px;
+      }
+      input, select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+      }
+      button {
+        margin-top: 15px;
+        padding: 10px;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Add New Employee</h2>
+    <form id="employeeForm">
+      <label for="initials">Initials:</label>
+      <input type="text" id="initials" name="initials" required>
+      
+      <label for="commonName">Common Name:</label>
+      <input type="text" id="commonName" name="commonName" required>
+      
+      <label for="legalName">Legal Name:</label>
+      <input type="text" id="legalName" name="legalName" required>
+      
+      <label for="jobTitle">Job Title:</label>
+      <select id="jobTitle" name="jobTitle" required>
+        <option value="Associate DVM">Associate DVM</option>
+        <option value="Boarding Assistant">Boarding Assistant</option>
+        <option value="Boarding Manager">Boarding Manager</option>
+        <option value="CCA">CCA</option>
+        <option value="CCS">CCS</option>
+        <option value="Lead DVM">Lead DVM</option>
+        <option value="LVT">LVT</option>
+        <option value="Office Manager">Office Manager</option>
+        <option value="PCA">PCA</option>
+        <option value="PCM">PCM</option>
+        <option value="PCS">PCS</option>
+        <option value="Practice Manager">Practice Manager</option>
+        <option value="Practice Owner">Practice Owner</option>
+        <option value="Relief DVM">Relief DVM</option>
+        <option value="Relief LVT">Relief LVT</option>
+        <option value="Slable">Slable</option>
+      </select>
+      
+      <label for="hireDate">Hire Date:</label>
+      <input type="date" id="hireDate" name="hireDate" required>
+      
+      <label for="schedule">Schedule:</label>
+      <select id="schedule" name="schedule" required>
+        <option value="Part-time">Part-time</option>
+        <option value="Full-time">Full-time</option>
+        <option value="Relief">Relief</option>
+      </select>
+      
+      <label for="status">Status:</label>
+      <select id="status" name="status" required>
+        <option value="Onboarding">Onboarding</option>
+        <option value="Training">Training</option>
+        <option value="Active">Active</option>
+        <option value="Inactive">Inactive</option>
+      </select>
+      
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+      
+      <label for="theme">Theme:</label>
+      <input type="text" id="theme" name="theme">
+      
+      <button type="submit">Submit</button>
+    </form>
+    
+    <script>
+      // Replace with your actual web app URL
+      const WEB_APP_URL = 'https://script.google.com/macros/s/YOUR_WEB_APP_ID/exec';
+      
+      document.getElementById('employeeForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Collect form data into an employee object
+        const employee = {
+          initials: document.getElementById('initials').value,
+          commonName: document.getElementById('commonName').value,
+          legalName: document.getElementById('legalName').value,
+          jobTitle: document.getElementById('jobTitle').value,
+          hireDate: document.getElementById('hireDate').value,
+          schedule: document.getElementById('schedule').value,
+          status: document.getElementById('status').value,
+          password: document.getElementById('password').value,
+          theme: document.getElementById('theme').value
+        };
+        
+        // Use fetch() to send a POST request with JSON data
+        fetch(WEB_APP_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(employee)
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Handle the response from the server
+          alert(data.message);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('There was an error submitting the form.');
+        });
+      });
+    </script>
+  </body>
+</html>
+<script>
+  function submitEmployeeForm() {
+    // Collect form data
+    var employee = {
+      initials: document.getElementById("initials").value,
+      commonName: document.getElementById("commonName").value,
+      legalName: document.getElementById("legalName").value,
+      jobTitle: document.getElementById("jobTitle").value,
+      hireDate: document.getElementById("hireDate").value,
+      schedule: document.getElementById("schedule").value,
+      status: document.getElementById("status").value,
+      password: document.getElementById("password").value,
+      theme: document.getElementById("theme").value
+    };
+    
+    // Call the backend function
+    google.script.run.withSuccessHandler(function(response) {
+      alert(response.message);
+    }).addEmployee(employee);
+  }
+</script>
