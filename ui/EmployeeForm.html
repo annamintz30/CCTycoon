@@ -26,7 +26,8 @@
   </head>
   <body>
     <h2>Add New Employee</h2>
-    <form id="employeeForm">
+    <form id="employeeForm" onsubmit="handleFormSubmit(event)">
+
       <label for="initials">Initials:</label>
       <input type="text" id="initials" name="initials" required>
       
@@ -83,9 +84,40 @@
       <button type="submit">Submit</button>
     </form>
     
+<script>
+function handleFormSubmit(event) {
+  event.preventDefault(); // Prevent the default form submission
+
+  // Create an employee object with form data
+  var employee = {
+    initials: document.getElementById('initials').value,
+    commonName: document.getElementById('commonName').value,
+    legalName: document.getElementById('legalName').value,
+    jobTitle: document.getElementById('jobTitle').value,
+    hireDate: document.getElementById('hireDate').value,
+    schedule: document.getElementById('schedule').value,
+    status: document.getElementById('status').value,
+    password: document.getElementById('password').value,
+    theme: document.getElementById('theme').value
+  };
+
+  // Use google.script.run to call the server-side function
+  google.script.run
+    .withSuccessHandler(function(response) {
+      alert('Employee added successfully!');
+      document.getElementById('employeeForm').reset(); // Reset the form
+    })
+    .withFailureHandler(function(error) {
+      alert('Error adding employee: ' + error.message);
+    })
+    .addEmployee(employee); // Call the server-side function
+}
+</script>
+
+
     <script>
       // Replace with your actual web app URL
-      const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwtMx9sxfbS0HMeHMavs5rSfeNwAKlqWxiOrI1JHSROYKsJCU1M6XqmWHmudAuIAs-hbA/exec';
+      const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwNIS4zNRRmoJZ57wB0HLIdJQU3yL7_27-BB-HYjLUj1EUomTt7yvcpFqgzl1uqj1Kc0w/exec';
       
       document.getElementById('employeeForm').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -104,7 +136,7 @@
         };
         
         // Use fetch() to send a POST request with JSON data
-        fetch("https://script.google.com/macros/s/AKfycbwtMx9sxfbS0HMeHMavs5rSfeNwAKlqWxiOrI1JHSROYKsJCU1M6XqmWHmudAuIAs-hbA/exec", {
+        fetch("https://script.google.com/macros/s/AKfycbwNIS4zNRRmoJZ57wB0HLIdJQU3yL7_27-BB-HYjLUj1EUomTt7yvcpFqgzl1uqj1Kc0w/exec", {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
