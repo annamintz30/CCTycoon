@@ -28,3 +28,26 @@ function doGet(e) {
   return HtmlService.createHtmlOutputFromFile('employeeService')
       .setTitle("Employee Database");
 }
+
+function doPost(e) {
+  try {
+    var request = JSON.parse(e.postData.contents);
+
+    if (request.action === "addEmployee") {
+      var result = addEmployee(request.employee);
+      return ContentService
+        .createTextOutput(JSON.stringify(result))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ success: false, message: "Unknown action" }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (error) {
+    Logger.log("Error in doPost: " + error.toString());
+    return ContentService
+      .createTextOutput(JSON.stringify({ success: false, message: error.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
