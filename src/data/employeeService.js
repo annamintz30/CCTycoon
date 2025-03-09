@@ -1,3 +1,10 @@
+// src/data/employeeService.gs 
+  // getEmployeeSheet()
+  // generateJccId()
+  // addEmployeeRecord()
+
+
+
 /**
  * Opens the Employee Google Sheet.
  * @return {GoogleAppsScript.Spreadsheet.Sheet} The Employees sheet.

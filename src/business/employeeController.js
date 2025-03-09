@@ -1,3 +1,8 @@
+// src/business/employeeController.gs
+  // addEmployee()
+
+
+
 /**
  * Adds a new employee after performing validations.
  * @param {Object} employee - Employee data from the UI.
@@ -17,4 +22,9 @@ function addEmployee(employee) {
   } catch (e) {
     return { success: false, message: "Error adding employee: " + e.message };
   }
+}
+
+function doGet(e) {
+  return HtmlService.createHtmlOutputFromFile('employeeService')
+      .setTitle("Employee Database");
 }
