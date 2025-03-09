@@ -1,10 +1,17 @@
+// src/data/employeeService.gs 
+  // getEmployeeSheet()
+  // generateJccId()
+  // addEmployeeRecord()
+
+
+
 /**
  * Opens the Employee Google Sheet.
  * @return {GoogleAppsScript.Spreadsheet.Sheet} The Employees sheet.
  */
 function getEmployeeSheet() {
   var ss = SpreadsheetApp.openById('1EApixFQPbGP5iDqXpxB5Z2hFVpiYl3vfzAAsZwsS_hE');
-  return ss.getSheetByName('cctEmployees');
+  return ss.getSheetByName('Employees');
 }
 
 /**
