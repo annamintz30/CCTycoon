@@ -50,8 +50,7 @@ function addEmployee(employee) {
 }
 
 function doGet(e) {
-  return HtmlService.createHtmlOutputFromFile('var html = HtmlService.createHtmlOutputFromFile('EmployeeDatabase');
-')
+  return HtmlService.createHtmlOutputFromFile('EmployeeDatabase')
       .setTitle("Employee Database");
 }
 
