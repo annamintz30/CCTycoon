@@ -1,7 +1,32 @@
 // src/business/employeeController.gs
   // addEmployee()
 
+function fetchEmployees() {
+  return employeeService.getEmployees();
+}
 
+function fetchEmployeesFiltered(searchQuery, showInactive) {
+  return employeeService.getFilteredEmployees(searchQuery, showInactive);
+}
+
+function updateEmployee(employee) {
+  employeeService.updateEmployee(employee);
+}
+
+function deleteEmployee(id) {
+  employeeService.deleteEmployee(id);
+}
+
+function openEmployeeForm() {
+  var html = HtmlService.createHtmlOutputFromFile('EmployeeForm').setWidth(400).setHeight(600);
+  SpreadsheetApp.getUi().showModalDialog(html, 'Add New Employee');
+}
+
+function openEditEmployeeForm(id) {
+  var html = HtmlService.createHtmlOutputFromFile('EmployeeEditForm').setWidth(400).setHeight(600);
+  SpreadsheetApp.getUi().showModalDialog(html, 'Edit Employee');
+}
+//================================
 
 /**
  * Adds a new employee after performing validations.

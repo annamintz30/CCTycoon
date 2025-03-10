@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Employee Database</title>
+  <link rel="stylesheet" type="text/css" href="../assets/css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header-bar">Employee Database</div>
+
+    <div class="controls">
+      <input type="text" id="searchBar" placeholder="Search employees..." oninput="filterEmployees()">
+      <label><input type="checkbox" id="showInactive" onchange="filterEmployees()"> Show Inactive</label>
+    </div>
+
+    <table id="employeeTable">
+      <thead>
+        <tr>
+          <th onclick="sortTable('commonName')">Name</th>
+          <th onclick="sortTable('jobTitle')">Job Title</th>
+          <th onclick="sortTable('schedule')">Schedule</th>
+          <th onclick="sortTable('status')">Status</th>
+          <th onclick="sortTable('hireDate')">Hire Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="employeeList">
+        <!-- Employee rows are populated dynamically -->
+      </tbody>
+    </table>
+
+    <div class="footer-buttons">
+      <button onclick="goToMainMenu()">Main Menu</button>
+      <button onclick="openEmployeeForm()">Add New Employee</button>
+    </div>
+  </div>
+
+  <script>
+    function openEmployeeForm() {
+      google.script.run.openEmployeeForm();
+    }
+
+    function loadEmployees() {
+      google.script.run.withSuccessHandler(displayEmployees).fetchEmployees();
+    }
+
+    function displayEmployees(data) {
+      const employeeList = document.getElementById('employeeList');
+      employeeList.innerHTML = "";
+      data.forEach(emp => {
+        let row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${emp.commonName}</td>
+          <td>${emp.jobTitle}</td>
+          <td>${emp.schedule}</td>
+          <td>${emp.status}</td>
+          <td>${emp.hireDate}</td>
+          <td>
+            <button onclick="editEmployee('${emp.id}')">Edit</button>
+            <button onclick="deleteEmployee('${emp.id}')">Delete</button>
+          </td>`;
+        employeeList.appendChild(row);
+      });
+    }
+
+    function editEmployee(id) {
+      google.script.run.openEditEmployeeForm(id);
+    }
+
+    function deleteEmployee(id) {
+      if (confirm("Are you sure you want to delete this employee?")) {
+        google.script.run.deleteEmployee(id);
+        loadEmployees();
+      }
+    }
+
+    function filterEmployees() {
+      let searchQuery = document.getElementById('searchBar').value.toLowerCase();
+      let showInactive = document.getElementById('showInactive').checked;
+      google.script.run.withSuccessHandler(displayEmployees).fetchEmployeesFiltered(searchQuery, showInactive);
+    }
+
+    window.onload = loadEmployees;
+  </script>
+</body>
+</html>
