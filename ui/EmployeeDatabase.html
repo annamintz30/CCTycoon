@@ -119,6 +119,12 @@
       color: white;
     }
 
+    .actions {
+      border: none;
+      font-size: 0.83em;
+      font-weight: 500;
+    }
+    
     .bottom-buttons {
       margin-top: 15px;
       display: flex;
@@ -201,7 +207,9 @@
           <th class="hiredate-sortable">
             <button class="sort-btn">Hire Date📅</button>
           </th>
-          <th>Actions</th>
+          <th>
+            <label class="actions">Actions</label>
+          </th>
         </tr>
       </thead>
     </table>
@@ -219,6 +227,59 @@
       <button id="addEmployee">Add New Employee</button>
     </div>
   </div>
+
+<script>
+function populateEmployeeTable() {
+  google.script.run.withSuccessHandler(displayEmployees).getEmployeeList();
+}
+
+function displayEmployees(employees) {
+  const employeeList = document.getElementById("employeeList");
+  employeeList.innerHTML = ""; // Clear existing rows
+
+  employees.forEach(employee => {
+    const row = document.createElement("tr");
+
+    // Create cells for each employee attribute
+    Object.keys(employee).forEach(key => {
+      const cell = document.createElement("td");
+      cell.textContent = employee[key];
+      row.appendChild(cell);
+    });
+
+    // Create Edit button
+    const editCell = document.createElement("td");
+    const editButton = document.createElement("button");
+    editButton.textContent = "Edit";
+    editButton.onclick = () => editEmployee(employee);
+    editCell.appendChild(editButton);
+    row.appendChild(editCell);
+
+    // Create Delete button
+    const deleteCell = document.createElement("td");
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
+    deleteButton.onclick = () => deleteEmployee(employee);
+    deleteCell.appendChild(deleteButton);
+    row.appendChild(deleteCell);
+
+    employeeList.appendChild(row);
+  });
+}
+
+function editEmployee(employee) {
+  // Logic to open the employee form with the employee's data
+}
+
+function deleteEmployee(employee) {
+  if (confirm(`Are you sure you want to delete ${employee.commonName}? This action is permanent.`)) {
+    google.script.run.withSuccessHandler(populateEmployeeTable).deleteEmployee(employee.id);
+  }
+}
+
+// Load employee data when the page opens
+window.onload = populateEmployeeTable;
+</script>
 
 </body>
 </html>
