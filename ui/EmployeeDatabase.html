@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Employee Database</title>
+  <style>
+    @font-face {
+      font-family: 'SFPixelate';
+      src: url('https://annamintz30.github.io/CCTycoon/assets/fonts/SFPixelate.ttf') format('truetype');
+    }
+
+    body {
+      font-family: 'SFPixelate', Arial, sans-serif;
+      background-color: #d5e8d4;
+      color: #000;
+      padding: 20px;
+    }
+
+    .container {
+      width: 75%;
+      margin: auto;
+      background-color: #a2c58c;
+      border: 3px solid;
+      border-color: #d0e5b4 #5a7f41 #5a7f41 #d0e5b4;
+      padding: 10px;
+    }
+
+    .header-bar {
+      background-color: #759e59;
+      color: #000;
+      text-shadow: 1px 1px 0px #acc799;
+      font-size: 1.5em;
+      text-align: center;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 2px solid #5a7f41;
+      line-height: 21px;
+    }
+
+    .search-controls {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .search-bar {
+      width: 70%;
+      padding: 5px;
+      border: 2px solid #5a7f41;
+      background-color: #BEE0A8;
+      font-family: 'SFPixelate', Arial, sans-serif;
+      word-spacing: -2px;
+    }
+
+    .inactive-toggle {
+      display: flex;
+      align-items: center;
+      word-spacing: 0px;
+    }
+
+    .inactive-toggle input {
+      margin-left: 5px;
+    }
+
+    .employee-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #BEE0A8;
+    }
+
+    .employee-table th {
+      border: 1px solid #5a7f41;
+      padding: 4px;
+      text-align: left;
+      word-spacing: -4px;
+      position: sticky;
+      z-index: 2;
+    }
+    
+    .employee-table td {
+      border: 1px solid #5a7f41;
+      padding: 4px;
+      text-align: left;
+      word-spacing: -4px;
+    }
+    
+    input, select {
+      color: #000;
+      width: 100%;
+      padding: 0px;
+      border: none;
+      box-sizing: border-box;
+      background-color: #BEE0A8;
+      font-family: 'SFPixelate', Arial, sans-serif;
+      margin-top: 6px;
+      margin-bottom: 6px;
+    }
+
+    .sort-btn {
+      font-family: 'SFPixelate', Arial, sans-serif;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9em;
+      padding: 0px;
+      word-spacing: -4px;
+    }
+
+    .edit-btn, .delete-btn {
+      background-color: #7da867;
+      border: 1px solid #5a7f41;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-family: 'SFPixelate', Arial, sans-serif;
+    }
+
+    .delete-btn {
+      background-color: #c55;
+      color: white;
+    }
+
+    .bottom-buttons {
+      margin-top: 15px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .bottom-buttons button {
+      padding: 10px;
+      width: 48%;
+      background-color: #759e59;
+      border: 2px solid #5a7f41;
+      font-family: 'SFPixelate', Arial, sans-serif;
+      cursor: pointer;
+    }
+    
+    .scroll-container {
+      height: 320px; /* Adjust height for about 20 rows */
+      overflow-y: auto; /* Enables vertical scrolling */
+      display: block;
+      border-top: 2px solid #5a7f41;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header-bar">Employee Database</div>
+
+    <div class="search-controls">
+      <input type="text" class="search-bar" placeholder="Search Employee">
+      <label class="inactive-toggle">
+        Display Inactive
+        <input type="checkbox" id="showInactive">
+      </label>
+    </div>
+
+    <table class="employee-table">
+      <thead>
+        <tr>
+          <th class="name-sortable">
+            <button class="sort-btn">Name ⇅</button>
+          </th>
+          <th class="job-title">
+             <select id="jobTitle" name="jobTitle" required>
+              <option value="Job Title">Job Title</option>
+              <option value="Associate DVM">Associate DVM</option>
+              <option value="Boarding Assistant">Boarding Assistant</option>
+              <option value="Boarding Manager">Boarding Manager</option>
+              <option value="CCA">CCA</option>
+              <option value="CCS">CCS</option>
+              <option value="Lead DVM">Lead DVM</option>
+              <option value="LVT">LVT</option>
+              <option value="Office Manager">Office Manager</option>
+              <option value="PCA">PCA</option>
+              <option value="PCM">PCM</option>
+              <option value="PCS">PCS</option>
+              <option value="Practice Manager">Practice Manager</option>
+              <option value="Practice Owner">Practice Owner</option>
+              <option value="Relief DVM">Relief DVM</option>
+              <option value="Relief LVT">Relief LVT</option>
+              <option value="Slable">Slable</option>
+             </select>
+            </th>
+          <th class="schedule-dropdown">
+            <select id="schedule" name="schedule" required>
+              <option value="Schedule">Schedule</option>
+              <option value="Part-time">Part-time</option>
+              <option value="Full-time">Full-time</option>
+              <option value="Relief">Relief</option>
+            </select>
+          </th>
+          <th class="status-sortable">
+            <select id="status" name="status" required>
+              <option value="Status">Status</option>
+              <option value="Onboarding">Onboarding</option>
+              <option value="Training">Training</option>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </th>
+          <th class="hiredate-sortable">
+            <button class="sort-btn">Hire Date📅</button>
+          </th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+    </table>
+    
+    <div class="scroll-container">
+      <table class="employee-table">
+        <tbody id="employeeList">
+        <!-- Employee rows will be dynamically added here -->
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="bottom-buttons">
+      <button id="mainMenu">Main Menu</button>
+      <button id="addEmployee">Add New Employee</button>
+    </div>
+  </div>
+
+</body>
+</html>
