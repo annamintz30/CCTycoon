@@ -23,8 +23,8 @@ function addEmployee(employee) {
 }
 
 function doGet(e) {
-  return HtmlService.createHtmlOutputFromFile('EmployeeForm')
-      .setTitle("Employee Database");
+  return HtmlService.createHtmlOutputFromFile('ui/EmployeeForm')
+      .setTitle("Employee test");
 }
 
 function doPost(e) {
