@@ -70,6 +70,6 @@ function getEmployeesFromSheet() {
     });
     return employeeObj;
   });
-
+    
   return employees;
 }

@@ -236,14 +236,19 @@ function populateEmployeeTable() {
 function displayEmployees(employees) {
   const employeeList = document.getElementById("employeeList");
   employeeList.innerHTML = ""; // Clear existing rows
+  
+  if (employees.length === 0) {
+    employeeList.innerHTML = "<tr><td colspan='6'>No employees found.</td></tr>";
+    return;
+  }
 
   employees.forEach(employee => {
     const row = document.createElement("tr");
 
     // Create cells for each employee attribute
-    Object.keys(employee).forEach(key => {
+    ["Common Name", "Job Title", "Schedule", "Status", "Hire Date"].forEach(field => {
       const cell = document.createElement("td");
-      cell.textContent = employee[key];
+      cell.textContent = employee[field] || "N/A";
       row.appendChild(cell);
     });
 
