@@ -37,29 +37,11 @@
       line-height: 21px;
     }
 
-    .search-controls {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-
-    .search-bar {
-      width: 70%;
-      padding: 5px;
-      border: 2px solid #5a7f41;
-      background-color: #BEE0A8;
-      font-family: 'SFPixelate', Arial, sans-serif;
-      word-spacing: -2px;
-    }
-
-    .inactive-toggle {
-      display: flex;
-      align-items: center;
-      word-spacing: 0px;
-    }
-
-    .inactive-toggle input {
-      margin-left: 5px;
+    .scroll-container {
+      height: 320px; /* Adjust height for about 20 rows */
+      overflow-y: auto; /* Enables vertical scrolling */
+      display: block;
+      border-top: 2px solid #5a7f41;
     }
 
     .employee-table {
@@ -68,42 +50,17 @@
       background-color: #BEE0A8;
     }
 
-    .employee-table th {
+    .employee-table th, .employee-table td {
       border: 1px solid #5a7f41;
       padding: 4px;
       text-align: left;
-      word-spacing: -4px;
-      position: sticky;
-      z-index: 2;
-    }
-    
-    .employee-table td {
-      border: 1px solid #5a7f41;
-      padding: 4px;
-      text-align: left;
-      word-spacing: -4px;
-    }
-    
-    input, select {
-      color: #000;
-      width: 100%;
-      padding: 0px;
-      border: none;
-      box-sizing: border-box;
-      background-color: #BEE0A8;
-      font-family: 'SFPixelate', Arial, sans-serif;
-      margin-top: 6px;
-      margin-bottom: 6px;
     }
 
     .sort-btn {
-      font-family: 'SFPixelate', Arial, sans-serif;
       background: none;
       border: none;
       cursor: pointer;
-      font-size: 0.9em;
-      padding: 0px;
-      word-spacing: -4px;
+      font-family: 'SFPixelate', Arial, sans-serif;
     }
 
     .edit-btn, .delete-btn {
@@ -119,12 +76,6 @@
       color: white;
     }
 
-    .actions {
-      border: none;
-      font-size: 0.83em;
-      font-weight: 500;
-    }
-    
     .bottom-buttons {
       margin-top: 15px;
       display: flex;
@@ -138,13 +89,6 @@
       border: 2px solid #5a7f41;
       font-family: 'SFPixelate', Arial, sans-serif;
       cursor: pointer;
-    }
-    
-    .scroll-container {
-      height: 320px; /* Adjust height for about 20 rows */
-      overflow-y: auto; /* Enables vertical scrolling */
-      display: block;
-      border-top: 2px solid #5a7f41;
     }
   </style>
 </head>
@@ -163,65 +107,24 @@
     <table class="employee-table">
       <thead>
         <tr>
-          <th class="name-sortable">
-            <button class="sort-btn">Name ⇅</button>
-          </th>
-          <th class="job-title">
-             <select id="jobTitle" name="jobTitle" required>
-              <option value="Job Title">Job Title</option>
-              <option value="Associate DVM">Associate DVM</option>
-              <option value="Boarding Assistant">Boarding Assistant</option>
-              <option value="Boarding Manager">Boarding Manager</option>
-              <option value="CCA">CCA</option>
-              <option value="CCS">CCS</option>
-              <option value="Lead DVM">Lead DVM</option>
-              <option value="LVT">LVT</option>
-              <option value="Office Manager">Office Manager</option>
-              <option value="PCA">PCA</option>
-              <option value="PCM">PCM</option>
-              <option value="PCS">PCS</option>
-              <option value="Practice Manager">Practice Manager</option>
-              <option value="Practice Owner">Practice Owner</option>
-              <option value="Relief DVM">Relief DVM</option>
-              <option value="Relief LVT">Relief LVT</option>
-              <option value="Slable">Slable</option>
-             </select>
-            </th>
-          <th class="schedule-dropdown">
-            <select id="schedule" name="schedule" required>
-              <option value="Schedule">Schedule</option>
-              <option value="Part-time">Part-time</option>
-              <option value="Full-time">Full-time</option>
-              <option value="Relief">Relief</option>
-            </select>
-          </th>
-          <th class="status-sortable">
-            <select id="status" name="status" required>
-              <option value="Status">Status</option>
-              <option value="Onboarding">Onboarding</option>
-              <option value="Training">Training</option>
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
-            </select>
-          </th>
-          <th class="hiredate-sortable">
-            <button class="sort-btn">Hire Date📅</button>
-          </th>
-          <th>
-            <label class="actions">Actions</label>
-          </th>
+          <th>Name <button class="sort-btn">▲▼</button></th>
+          <th>Job Title</th>
+          <th>Schedule</th>
+          <th>Status</th>
+          <th>Hire Date</th>
+          <th>Actions</th>
         </tr>
       </thead>
     </table>
-    
+
     <div class="scroll-container">
       <table class="employee-table">
         <tbody id="employeeList">
-        <!-- Employee rows will be dynamically added here -->
+          <!-- Employee rows will be dynamically added here -->
         </tbody>
       </table>
     </div>
-    
+
     <div class="bottom-buttons">
       <button id="mainMenu">Main Menu</button>
       <button id="addEmployee">Add New Employee</button>
@@ -230,40 +133,54 @@
 
 <script>
 function populateEmployeeTable() {
-  google.script.run.withSuccessHandler(displayEmployees).getEmployeeList();
+  console.log("Fetching employees from Apps Script...");
+  google.script.run
+    .withSuccessHandler(function(employees) {
+      console.log("Received Employees Data:", employees);
+      if (!employees || employees.length === 0) {
+        console.error("Error: Employees data is null or empty.");
+        return;
+      }
+      displayEmployees(employees);
+    })
+    .withFailureHandler(function(error) {
+      console.error("Error fetching employees:", error.message);
+    })
+    .getEmployeeList();
 }
 
 function displayEmployees(employees) {
+  console.log("Displaying Employees: ", employees);
+
   const employeeList = document.getElementById("employeeList");
-  employeeList.innerHTML = ""; // Clear existing rows
-  
-  if (employees.length === 0) {
-    employeeList.innerHTML = "<tr><td colspan='6'>No employees found.</td></tr>";
-    return;
-  }
+  employeeList.innerHTML = ""; // Clear previous data
 
   employees.forEach(employee => {
     const row = document.createElement("tr");
 
-    // Create cells for each employee attribute
-    ["Common Name", "Job Title", "Schedule", "Status", "Hire Date"].forEach(field => {
+    // Define column order
+    const fields = ["commonName", "jobTitle", "schedule", "status", "hireDate"];
+
+    fields.forEach(field => {
       const cell = document.createElement("td");
       cell.textContent = employee[field] || "N/A";
       row.appendChild(cell);
     });
 
-    // Create Edit button
+    // Edit button
     const editCell = document.createElement("td");
     const editButton = document.createElement("button");
     editButton.textContent = "Edit";
+    editButton.className = "edit-btn";
     editButton.onclick = () => editEmployee(employee);
     editCell.appendChild(editButton);
     row.appendChild(editCell);
 
-    // Create Delete button
+    // Delete button
     const deleteCell = document.createElement("td");
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "Delete";
+    deleteButton.className = "delete-btn";
     deleteButton.onclick = () => deleteEmployee(employee);
     deleteCell.appendChild(deleteButton);
     row.appendChild(deleteCell);
@@ -273,7 +190,7 @@ function displayEmployees(employees) {
 }
 
 function editEmployee(employee) {
-  // Logic to open the employee form with the employee's data
+  alert("Edit function to be implemented: " + employee.commonName);
 }
 
 function deleteEmployee(employee) {
@@ -282,7 +199,7 @@ function deleteEmployee(employee) {
   }
 }
 
-// Load employee data when the page opens
+// Ensure `populateEmployeeTable` runs when the page loads
 window.onload = populateEmployeeTable;
 </script>
 

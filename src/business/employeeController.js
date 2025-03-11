@@ -49,7 +49,15 @@ function doPost(e) {
       .setMimeType(ContentService.MimeType.JSON);
   }
 }
+
 function getEmployeeList() {
   const employees = getEmployeesFromSheet();
+  Logger.log("Returning Employees to Frontend: " + JSON.stringify(employees));
+  
+  if (!employees || employees.length === 0) {
+    return []; // Return an empty array instead of null/undefined
+  }
+  
   return employees;
 }
+
