@@ -37,6 +37,11 @@
       line-height: 21px;
     }
 
+    .search-bar {
+      background-color: #BEE0A8;
+      font-family: 'SFPixelate', Arial, sans-serif;
+    }
+    
     .scroll-container {
       height: 320px; /* Adjust height for about 20 rows */
       overflow-y: auto; /* Enables vertical scrolling */
@@ -48,6 +53,13 @@
       width: 100%;
       border-collapse: collapse;
       background-color: #BEE0A8;
+    }
+    
+    thead {
+      position: sticky;
+      top: 0;
+      background-color: #BEE0A8; /* Match the table background */
+      z-index: 2;
     }
 
     .employee-table th, .employee-table td {
@@ -62,6 +74,19 @@
       cursor: pointer;
       font-family: 'SFPixelate', Arial, sans-serif;
     }
+    
+    .select {
+      background: none;
+      border: none;
+      font-family: 'SFPixelate', Arial, sans-serif;
+    }
+    
+    .actions {
+      border: none;
+      word-spacing: -3px;
+      font-size: 0.83em;
+      font-weight: normal;
+    }  
 
     .edit-btn, .delete-btn {
       background-color: #7da867;
@@ -92,6 +117,7 @@
     }
   </style>
 </head>
+  
 <body>
   <div class="container">
     <div class="header-bar">Employee Database</div>
@@ -103,22 +129,57 @@
         <input type="checkbox" id="showInactive">
       </label>
     </div>
-
-    <table class="employee-table">
-      <thead>
-        <tr>
-          <th>Name <button class="sort-btn">▲▼</button></th>
-          <th>Job Title</th>
-          <th>Schedule</th>
-          <th>Status</th>
-          <th>Hire Date</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-    </table>
-
+    
     <div class="scroll-container">
       <table class="employee-table">
+        <thead>
+          <tr>
+            <th>
+              <button class="sort-btn">Name ▲▼</button>
+            </th>
+            <th><select class="select" id="jobTitle" name="jobTitle" required>
+              <option value="Job Title">Job Title</option>
+              <option value="Associate DVM">Assoc DVM</option>
+              <option value="Boarding Assistant">Boarding Asst</option>
+              <option value="Boarding Manager">Boarding Mgr</option>
+              <option value="CCA">CCA</option>
+              <option value="CCS">CCS</option>
+              <option value="Lead DVM">Lead DVM</option>
+              <option value="LVT">LVT</option>
+              <option value="Office Manager">Office Mgr</option>
+              <option value="PCA">PCA</option>
+              <option value="PCM">PCM</option>
+              <option value="PCS">PCS</option>
+              <option value="Practice Manager">Practice Mgr</option>
+              <option value="Practice Owner">Practice Owner</option>
+              <option value="Relief DVM">Relief DVM</option>
+              <option value="Relief LVT">Relief LVT</option>
+              <option value="Slable">Slable</option>
+             </select>
+            </th>
+            <th><select class="select" id="schedule" name="jobTitle" required>
+              <option value="Schedule">Schedule</option>
+              <option value="Part-time">Part-time</option>
+              <option value="Full-time">Full-time</option>
+              <option value="Relief">Relief</option>
+             </select>
+            </th>
+            <th><select class="select" id="status" name="status" required>
+              <option value="Status">Status</option>
+              <option value="Onboarding">Onboarding</option>
+              <option value="Training">Training</option>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+             </select>
+            </th>
+            <th class="hiredate-sortable">
+              <button class="sort-btn">Hire Date📅</button>
+            </th>
+            <th>
+              <label class="actions">Actions</label>
+            </th>
+          </tr>
+        </thead>
         <tbody id="employeeList">
           <!-- Employee rows will be dynamically added here -->
         </tbody>
@@ -130,8 +191,8 @@
       <button id="addEmployee">Add New Employee</button>
     </div>
   </div>
-
 <script>
+  
 function populateEmployeeTable() {
     console.log("Fetching employees from Apps Script...");
     google.script.run
@@ -149,7 +210,6 @@ function populateEmployeeTable() {
       })
       .getEmployeeList();
 }
-
 
 function displayEmployees(employees) {
   console.log("Displaying Employees: ", employees);
@@ -169,23 +229,22 @@ function displayEmployees(employees) {
       row.appendChild(cell);
     });
 
-    // Edit button
-    const editCell = document.createElement("td");
+    // Actions cell containing both Edit and Delete buttons
+    const actionsCell = document.createElement("td");
+
     const editButton = document.createElement("button");
     editButton.textContent = "Edit";
     editButton.className = "edit-btn";
     editButton.onclick = () => editEmployee(employee);
-    editCell.appendChild(editButton);
-    row.appendChild(editCell);
 
-    // Delete button
-    const deleteCell = document.createElement("td");
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "Delete";
     deleteButton.className = "delete-btn";
     deleteButton.onclick = () => deleteEmployee(employee);
-    deleteCell.appendChild(deleteButton);
-    row.appendChild(deleteCell);
+
+    actionsCell.appendChild(editButton);
+    actionsCell.appendChild(deleteButton);
+    row.appendChild(actionsCell);
 
     employeeList.appendChild(row);
   });
