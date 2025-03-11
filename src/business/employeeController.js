@@ -15,17 +15,27 @@ function addEmployee(employee) {
   
   // Use the data layer to add the employee record.
   try {
-    var jccId = addEmployeeRecord(employee);
-    return { success: true, message: "Employee added with JCC ID " + jccId };
-  } catch (e) {
-    return { success: false, message: "Error adding employee: " + e.message };
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Employees");
+    sheet.appendRow([
+      employee.initials, employee.commonName, employee.legalName, employee.jobTitle, 
+      employee.hireDate, employee.schedule, employee.status, employee.password, employee.theme
+    ]);
+    
+    return "Employee added successfully"; // Ensure a response is returned
+  } catch (error) {
+    return `Error: ${error.message}`;
   }
 }
 
 function doGet(e) {
-  return HtmlService.createHtmlOutputFromFile('ui/EmployeeDatabase')
-      .setTitle("Employee Database");
+    if (e.parameter.page === "EmployeeForm") {
+        return HtmlService.createHtmlOutputFromFile("ui/EmployeeForm")
+            .setTitle("Add New Employee");
+    }
+    return HtmlService.createHtmlOutputFromFile("ui/EmployeeDatabase")
+        .setTitle("Employee Database");
 }
+
 
 function doPost(e) {
   try {
@@ -60,5 +70,8 @@ function getEmployeeList() {
   return JSON.stringify(employees); 
 }
 
+function getEmployeeFormUrl() {
+    return ScriptApp.getService().getUrl() + "?page=EmployeeForm";
+}
 
 

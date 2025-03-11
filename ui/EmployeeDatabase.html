@@ -43,8 +43,8 @@
     }
     
     .scroll-container {
-      height: 320px; /* Adjust height for about 20 rows */
-      overflow-y: auto; /* Enables vertical scrolling */
+      height: 320px;
+      overflow-y: auto;
       display: block;
       border-top: 2px solid #5a7f41;
     }
@@ -58,7 +58,7 @@
     thead {
       position: sticky;
       top: 0;
-      background-color: #BEE0A8; /* Match the table background */
+      background-color: #BEE0A8;
       z-index: 2;
     }
 
@@ -92,6 +92,7 @@
       background-color: #7da867;
       border: 1px solid #5a7f41;
       padding: 5px 10px;
+      margin-right: 5px;
       cursor: pointer;
       font-family: 'SFPixelate', Arial, sans-serif;
     }
@@ -134,137 +135,140 @@
       <table class="employee-table">
         <thead>
           <tr>
+            <th><button class="sort-btn">Name ▲▼</button></th>
             <th>
-              <button class="sort-btn">Name ▲▼</button>
-            </th>
-            <th><select class="select" id="jobTitle" name="jobTitle" required>
-              <option value="Job Title">Job Title</option>
-              <option value="Associate DVM">Assoc DVM</option>
-              <option value="Boarding Assistant">Boarding Asst</option>
-              <option value="Boarding Manager">Boarding Mgr</option>
-              <option value="CCA">CCA</option>
-              <option value="CCS">CCS</option>
-              <option value="Lead DVM">Lead DVM</option>
-              <option value="LVT">LVT</option>
-              <option value="Office Manager">Office Mgr</option>
-              <option value="PCA">PCA</option>
-              <option value="PCM">PCM</option>
-              <option value="PCS">PCS</option>
-              <option value="Practice Manager">Practice Mgr</option>
-              <option value="Practice Owner">Practice Owner</option>
-              <option value="Relief DVM">Relief DVM</option>
-              <option value="Relief LVT">Relief LVT</option>
-              <option value="Slable">Slable</option>
-             </select>
-            </th>
-            <th><select class="select" id="schedule" name="jobTitle" required>
-              <option value="Schedule">Schedule</option>
-              <option value="Part-time">Part-time</option>
-              <option value="Full-time">Full-time</option>
-              <option value="Relief">Relief</option>
-             </select>
-            </th>
-            <th><select class="select" id="status" name="status" required>
-              <option value="Status">Status</option>
-              <option value="Onboarding">Onboarding</option>
-              <option value="Training">Training</option>
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
-             </select>
-            </th>
-            <th class="hiredate-sortable">
-              <button class="sort-btn">Hire Date📅</button>
+              <select class="select" id="jobTitle" name="jobTitle" required>
+                <option value="Job Title">Job Title</option>
+                <option value="Associate DVM">Assoc DVM</option>
+                <option value="Boarding Assistant">Boarding Asst</option>
+                <option value="Boarding Manager">Boarding Mgr</option>
+                <option value="CCA">CCA</option>
+                <option value="CCS">CCS</option>
+                <option value="Lead DVM">Lead DVM</option>
+                <option value="LVT">LVT</option>
+                <option value="Office Manager">Office Mgr</option>
+                <option value="PCA">PCA</option>
+                <option value="PCM">PCM</option>
+                <option value="PCS">PCS</option>
+                <option value="Practice Manager">Practice Mgr</option>
+                <option value="Practice Owner">Practice Owner</option>
+                <option value="Relief DVM">Relief DVM</option>
+                <option value="Relief LVT">Relief LVT</option>
+                <option value="Slable">Slable</option>
+              </select>
             </th>
             <th>
-              <label class="actions">Actions</label>
+              <select class="select" id="schedule" name="schedule" required>
+                <option value="Schedule">Schedule</option>
+                <option value="Part-time">Part-time</option>
+                <option value="Full-time">Full-time</option>
+                <option value="Relief">Relief</option>
+              </select>
             </th>
+            <th>
+              <select class="select" id="status" name="status" required>
+                <option value="Status">Status</option>
+                <option value="Onboarding">Onboarding</option>
+                <option value="Training">Training</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </th>
+            <th><button class="sort-btn">Hire Date 📅</button></th>
+            <th><label class="actions">Actions</label></th>
           </tr>
         </thead>
-        <tbody id="employeeList">
-          <!-- Employee rows will be dynamically added here -->
-        </tbody>
+        <tbody id="employeeList"></tbody>
       </table>
     </div>
 
     <div class="bottom-buttons">
       <button id="mainMenu">Main Menu</button>
-      <button id="addEmployee">Add New Employee</button>
+      <button id="addEmployee" onclick="openEmployeeForm()">Add New Employee</button>
     </div>
   </div>
+
 <script>
-  
-function populateEmployeeTable() {
-    console.log("Fetching employees from Apps Script...");
-    google.script.run
-      .withSuccessHandler(function(response) {
-        let employees = JSON.parse(response); // Convert JSON string to array
-        console.log("Received Employees Data:", employees);
-        if (!employees || employees.length === 0) {
-          console.error("Error: Employees data is null or empty.");
-          return;
-        }
-        displayEmployees(employees);
-      })
-      .withFailureHandler(function(error) {
-        console.error("Error fetching employees:", error.message);
-      })
-      .getEmployeeList();
-}
+google.script.run
+  .withSuccessHandler(function(response) {
+    if (response.startsWith("Error")) {
+      alert(response); // Show error message if something went wrong
+      return;
+    }
+
+    alert(response); // Show success message
+
+    if (window.opener) {
+      window.opener.refreshEmployeeTable(); // Ensure parent updates before closing
+    }
+
+    setTimeout(() => {
+      window.close(); // Give Apps Script enough time before closing the window
+    }, 500);  // Delay closing the window slightly
+  })
+  .withFailureHandler(function(error) {
+    alert('Error adding employee: ' + error.message);
+  })
+  .addEmployee(employee);
+
 
 function displayEmployees(employees) {
   console.log("Displaying Employees: ", employees);
 
   const employeeList = document.getElementById("employeeList");
-  employeeList.innerHTML = ""; // Clear previous data
+  employeeList.innerHTML = "";
 
   employees.forEach(employee => {
     const row = document.createElement("tr");
 
-    // Define column order
     const fields = ["commonName", "jobTitle", "schedule", "status", "hireDate"];
 
     fields.forEach(field => {
       const cell = document.createElement("td");
-      cell.textContent = employee[field] || "N/A";
+      
+      if (field === "hireDate" && employee[field]) {
+        let rawDate = new Date(employee[field]);
+        if (!isNaN(rawDate.getTime())) {
+          let formattedDate = `${String(rawDate.getMonth() + 1).padStart(2, '0')}-${String(rawDate.getDate()).padStart(2, '0')}-${rawDate.getFullYear()}`;
+          cell.textContent = formattedDate;
+        } else {
+          cell.textContent = "Invalid Date";
+        }
+      } else {
+        cell.textContent = employee[field] || "N/A";
+      }
       row.appendChild(cell);
     });
 
-    // Actions cell containing both Edit and Delete buttons
     const actionsCell = document.createElement("td");
-
-    const editButton = document.createElement("button");
-    editButton.textContent = "Edit";
-    editButton.className = "edit-btn";
-    editButton.onclick = () => editEmployee(employee);
-
-    const deleteButton = document.createElement("button");
-    deleteButton.textContent = "Delete";
-    deleteButton.className = "delete-btn";
-    deleteButton.onclick = () => deleteEmployee(employee);
-
-    actionsCell.appendChild(editButton);
-    actionsCell.appendChild(deleteButton);
+    actionsCell.innerHTML = `<button class="edit-btn">Edit</button> <button class="delete-btn">Delete</button>`;
     row.appendChild(actionsCell);
 
     employeeList.appendChild(row);
   });
 }
 
-function editEmployee(employee) {
-  alert("Edit function to be implemented: " + employee.commonName);
-}
-
-function deleteEmployee(employee) {
-  if (confirm(`Are you sure you want to delete ${employee.commonName}? This action is permanent.`)) {
-    google.script.run.withSuccessHandler(populateEmployeeTable).deleteEmployee(employee.id);
-  }
-}
-
-  // Ensure the function runs **after** the page loads
-  window.onload = function() {
+window.onload = () => {
     console.log("Page Loaded. Running populateEmployeeTable()");
     populateEmployeeTable();
-  };
+};
+
+function openEmployeeForm() {
+    google.script.run
+      .withSuccessHandler(function(url) {
+        const popup = window.open(url, '_blank', 'width=500,height=600');
+        if (!popup) {
+          alert("Popup blocked! Please allow popups for this site.");
+        }
+      })
+      .getEmployeeFormUrl(); // Calls a server-side function
+}
+
+function refreshEmployeeTable() {
+    console.log("Refreshing employee table...");
+    populateEmployeeTable(); // This will fetch and update the employee list
+}
+
 </script>
 
 </body>
