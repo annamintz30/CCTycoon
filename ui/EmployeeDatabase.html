@@ -133,21 +133,23 @@
 
 <script>
 function populateEmployeeTable() {
-  console.log("Fetching employees from Apps Script...");
-  google.script.run
-    .withSuccessHandler(function(employees) {
-      console.log("Received Employees Data:", employees);
-      if (!employees || employees.length === 0) {
-        console.error("Error: Employees data is null or empty.");
-        return;
-      }
-      displayEmployees(employees);
-    })
-    .withFailureHandler(function(error) {
-      console.error("Error fetching employees:", error.message);
-    })
-    .getEmployeeList();
+    console.log("Fetching employees from Apps Script...");
+    google.script.run
+      .withSuccessHandler(function(response) {
+        let employees = JSON.parse(response); // Convert JSON string to array
+        console.log("Received Employees Data:", employees);
+        if (!employees || employees.length === 0) {
+          console.error("Error: Employees data is null or empty.");
+          return;
+        }
+        displayEmployees(employees);
+      })
+      .withFailureHandler(function(error) {
+        console.error("Error fetching employees:", error.message);
+      })
+      .getEmployeeList();
 }
+
 
 function displayEmployees(employees) {
   console.log("Displaying Employees: ", employees);
@@ -199,8 +201,11 @@ function deleteEmployee(employee) {
   }
 }
 
-// Ensure `populateEmployeeTable` runs when the page loads
-window.onload = populateEmployeeTable;
+  // Ensure the function runs **after** the page loads
+  window.onload = function() {
+    console.log("Page Loaded. Running populateEmployeeTable()");
+    populateEmployeeTable();
+  };
 </script>
 
 </body>

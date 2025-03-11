@@ -59,17 +59,33 @@ function addEmployeeRecord(employee) {
 }
 
 function getEmployeesFromSheet() {
-  const sheet = SpreadsheetApp.openById("1EApixFQPbGP5iDqXpxB5Z2hFVpiYl3vfzAAsZwsS_hE").getSheetByName("Employees");
-  const data = sheet.getDataRange().getValues();
+  Logger.log("getEmployeesFromSheet() called.");
   
-  const headers = data[0]; // First row is headers
+  const sheet = SpreadsheetApp.openById("1EApixFQPbGP5iDqXpxB5Z2hFVpiYl3vfzAAsZwsS_hE").getSheetByName("Employees");
+  if (!sheet) {
+    Logger.log("Error: Sheet not found.");
+    return null;
+  }
+
+  const data = sheet.getDataRange().getValues();
+  Logger.log("Raw Sheet Data: " + JSON.stringify(data));
+
+  if (data.length <= 1) {
+    Logger.log("No employee data found (excluding headers).");
+    return [];
+  }
+
+  const headers = data[0];
   const employees = data.slice(1).map(row => {
     let employeeObj = {};
     headers.forEach((header, index) => {
-      employeeObj[header] = row[index]; // Map values to headers
+      employeeObj[header] = row[index];
     });
     return employeeObj;
   });
-    
+
+  Logger.log("Formatted Employees Data: " + JSON.stringify(employees));
+  
   return employees;
 }
+

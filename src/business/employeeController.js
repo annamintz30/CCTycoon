@@ -51,13 +51,14 @@ function doPost(e) {
 }
 
 function getEmployeeList() {
-  const employees = getEmployeesFromSheet();
-  Logger.log("Returning Employees to Frontend: " + JSON.stringify(employees));
+  Logger.log("getEmployeeList() called.");
+  let employees = getEmployeesFromSheet();
   
-  if (!employees || employees.length === 0) {
-    return []; // Return an empty array instead of null/undefined
-  }
-  
-  return employees;
+  Logger.log("Employees Retrieved: " + JSON.stringify(employees));
+
+  // Return as JSON String
+  return JSON.stringify(employees); 
 }
+
+
 
