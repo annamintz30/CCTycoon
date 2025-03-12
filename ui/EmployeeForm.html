@@ -155,33 +155,35 @@
   </div>
 
 <script>
-function handleFormSubmit(event) {
-  event.preventDefault();
+  function handleFormSubmit(event) {
+    event.preventDefault();
 
-  // Collect form data
-  let employee = {
-    legalName: document.getElementById("legalName").value,
-    commonName: document.getElementById("commonName").value,
-    initials: document.getElementById("initials").value,
-    jobTitle: document.getElementById("jobTitle").value,
-    hireDate: document.getElementById("hireDate").value,
-    schedule: document.getElementById("schedule").value,
-    status: document.getElementById("status").value,
-    password: document.getElementById("password").value,
-    theme: document.getElementById("theme").value
-  };
+    var employee = {
+      initials: document.getElementById('initials').value,
+      commonName: document.getElementById('commonName').value,
+      legalName: document.getElementById('legalName').value,
+      jobTitle: document.getElementById('jobTitle').value,
+      hireDate: document.getElementById('hireDate').value,
+      schedule: document.getElementById('schedule').value,
+      status: document.getElementById('status').value,
+      password: document.getElementById('password').value,
+      theme: document.getElementById('theme').value
+    };
 
-  // Use google.script.run to call the Apps Script function
-  google.script.run
-    .withSuccessHandler(function(response) {
-      alert("Employee added successfully!");
-      document.getElementById("employeeForm").reset();
-    })
-    .withFailureHandler(function(error) {
-      alert("Error adding employee: " + error.message);
-    })
-    .addEmployee(employee); // This must match the function name in your Apps Script
-}
+    google.script.run
+      .withSuccessHandler(() => {
+        alert("Employee added successfully!");
+
+        // ✅ Delay closing the window to ensure Apps Script finishes processing
+        setTimeout(() => {
+          google.script.host.close();
+        }, 500); // 500ms delay for processing to complete
+      })
+      .withFailureHandler(error => {
+        alert("Error adding employee: " + error.message);
+      })
+      .addEmployee(employee);
+  }
 </script>
 
 </body>

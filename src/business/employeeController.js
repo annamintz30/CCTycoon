@@ -36,7 +36,6 @@ function doGet(e) {
         .setTitle("Employee Database");
 }
 
-
 function doPost(e) {
   try {
     var request = JSON.parse(e.postData.contents);
